@@ -1,0 +1,30 @@
+<header th:fragment="header">
+
+<div class="header-container">
+
+    <div class="logo">
+        💎 Mahalaxmi Saaj
+    </div>
+
+    <div class="menu-toggle "  onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <nav id="nav-menu">
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/products}">Collections</a></li>
+            <li><a th:href="@{/cart}">Cart</a></li>
+            <li><a th:href="@{/checkout}">Checkout</a></li>
+        </ul>
+    </nav>
+
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("nav-menu").classList.toggle("show-menu");
+}
+</script>
+
+</header>

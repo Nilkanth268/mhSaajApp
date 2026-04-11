@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<title>Home</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+	<div th:replace="fragment/header :: header"></div>
+
+	<main>
+
+		<h2>Welcome to Patil Jewellers</h2>
+		<p>Explore our beautiful jewellery collection.</p>
+
+
+		<a th:href="@{admin/product_form}" class="btn btn-primary">
+			Add Product
+		</a>
+	</main>
+	<div th:replace="fragment/footer :: footer"></div>
+</body>
+
+</html>
