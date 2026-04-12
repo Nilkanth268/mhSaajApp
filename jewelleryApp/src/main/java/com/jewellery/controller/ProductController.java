@@ -22,7 +22,7 @@ public class ProductController {
 		this.homeControler = homeControler;
 	}
 
-	// make the methos that will take me to save Product froent end page
+	String errMsg = "";
 
 	// crate a method that will take save product data to service and enter in
 	// database
@@ -35,9 +35,29 @@ public class ProductController {
 	}
 
 	@PostMapping("/admin/save_product")
-	public String saveProduct(Product product) {
+	public String saveProduct(Product product, Model model) {
 
 		System.out.println("Save Product Method " + product);
+		try {
+
+			if (product != null) {
+				System.out.println("Product Object Service send :" + product);
+				productService.saveProductService(product);
+				return "product_form";
+			}
+
+		} catch (Exception e) {
+			errMsg = e.getMessage();
+			System.out.println(errMsg);
+
+			// If using Spring Data JPA, the real message is often inside the root cause
+			if (e.getCause() != null && e.getCause().getCause() != null) {
+				errMsg = e.getCause().getCause().getMessage();
+			}
+
+			model.addAttribute("errMsg", errMsg);
+
+		}
 		return "product_form";
 	}
 

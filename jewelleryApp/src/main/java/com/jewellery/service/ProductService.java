@@ -9,12 +9,21 @@ import com.jewellery.repository.ProductRepository;
 @Service
 public class ProductService {
 	
+	String result = "";
+
 	@Autowired
 	private ProductRepository productRepository;
-	
-	public void saveProductService(Product product) {
-		
-		productRepository.saveProduct(product);
+
+	public String saveProductService(Product product) {
+
+		System.out.println("saveProductService" + product);
+		try {
+			productRepository.saveProduct(product);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			result = e.getMessage();
+		}
+		return result;
 	}
 
 }

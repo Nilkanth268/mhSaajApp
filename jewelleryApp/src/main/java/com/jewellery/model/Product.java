@@ -12,60 +12,57 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Product {
-	
+
 	private Integer pId;
 	private String pCode;
 	private String pName;
 	private String pCategory;
-	private String pDescription;
+	private String description;
 	private Double pAmount;
 	private Timestamp pCrDate;
-	
+
 	private Timestamp pUpDate;
 	private Integer pCrId;
-	
-	
-	public String getPCode(){
+
+	public String getPCode() {
 		return pCode;
 	}
-	
+
 	public void setPCode(String pCode) {
 		this.pCode = pCode;
 	}
-	
+
 	public String getPName() {
 		return pName;
 	}
-	
+
 	public void setPName(String pName) {
 		this.pName = pName;
 	}
-	
+
 	public String getPCategory() {
 		return pCategory;
 	}
-	
+
 	public void setPCategory(String pCategory) {
 		this.pCategory = pCategory;
 	}
-	
-	
+
 	public String getPDescription() {
-	    return pDescription;
+		return description;
 	}
 
-	public void setPDescription(String pDescription) {
-	    this.pDescription = pDescription;
+	public void setPDescription(String description) {
+		this.description = description;
 	}
-	
+
 	public Double getPAmount() {
 		return pAmount;
 	}
-	
+
 	public void setPAmount(Double pAmount) {
 		this.pAmount = pAmount;
 	}
-	
 
 	public Timestamp getpCrDate() {
 		return pCrDate;
@@ -90,6 +87,5 @@ public class Product {
 	public void setpCrId(Integer pCrId) {
 		this.pCrId = pCrId;
 	}
-
 
 }

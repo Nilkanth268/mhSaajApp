@@ -10,18 +10,24 @@ import tools.jackson.databind.ObjectMapper;
 
 @Repository
 public class ProductRepository {
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
-	public void saveProduct(Product product) {
-		
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		
-		String productJsonObj = objectMapper.writeValueAsString(product);
-		
-		jdbcTemplate.update("Call SAVE_PRODUCT", productJsonObj);
-	}
 
+	public void saveProduct(Product product) {
+
+		System.out.println("saveProductRepo meathod called " + product);
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			String productJsonObj = objectMapper.writeValueAsString(product);
+			System.out.println("productJsonObj: "+productJsonObj);
+
+			if (productJsonObj != null) {
+				jdbcTemplate.update("Call SAVE_PRODUCT", productJsonObj);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }
