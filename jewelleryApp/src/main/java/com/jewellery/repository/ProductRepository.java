@@ -21,10 +21,11 @@ public class ProductRepository {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			String productJsonObj = objectMapper.writeValueAsString(product);
-			System.out.println("productJsonObj: "+productJsonObj);
+			System.out.println("productJsonObj: " + productJsonObj);
+			String sqlStr = "Call SAVE_PRODUCT(?)";
 
 			if (productJsonObj != null) {
-				jdbcTemplate.update("Call SAVE_PRODUCT", productJsonObj);
+				jdbcTemplate.update(sqlStr, productJsonObj);
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
