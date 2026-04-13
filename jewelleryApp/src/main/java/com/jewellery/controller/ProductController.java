@@ -1,5 +1,7 @@
 package com.jewellery.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,6 +61,17 @@ public class ProductController {
 
 		}
 		return "product_form";
+	}
+	
+	@GetMapping("/products")
+	public String getAllProduct(Model model) {
+		
+		List<Product> prodList = productService.getAllProd();
+		
+		model.addAttribute("product", prodList);		
+				
+		return "product-list";
+
 	}
 
 }
