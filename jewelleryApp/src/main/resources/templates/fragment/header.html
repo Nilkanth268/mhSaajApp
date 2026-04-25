@@ -1,31 +1,47 @@
 <header th:fragment="header">
 
-<div class="header-container">
+	<div class="header-container">
 
-    <div class="logo">
-        💎 Mahalaxmi Saaj
-    </div>
+		<div class="logo">
+			💎 Mahalaxmi Saaj
+		</div>
 
-    <div class="menu-toggle "  onclick="toggleMenu()">
-        ☰
-    </div>
+		<div class="menu-toggle " onclick="toggleMenu()">
+			☰
+		</div>
 
-    <nav id="nav-menu">
-        <ul>
-            <li><a th:href="@{/}">Home</a></li>
-			<li><a th:href="@{admin/product_form}">Add Product</a></li>
-            <li><a th:href="@{/products}">Collections</a></li>
-            <li><a th:href="@{/cart}">Cart</a></li>
-            <li><a th:href="@{/checkout}">Checkout</a></li>
-        </ul>
-    </nav>
+	
+		<nav id="nav-menu">
+			<ul>
+				<li><a th:href="@{/products}">Collections</a></li>
 
-</div>
 
-<script>
-function toggleMenu(){
-    document.getElementById("nav-menu").classList.toggle("show-menu");
-}
-</script>
+				<!-- Show only when logged in -->
+				<div sec:authorize="isAuthenticated()">
+					<li><a th:href="@{/logout}">Logout</a></li>
+				</div>
+
+				<!-- Show when NOT logged in -->
+				<div sec:authorize="isAnonymous()">
+					<li><a th:href="@{/login}">Login</a></li>
+				</div>
+
+				<!-- 👑 ONLY ADMIN -->
+				<div sec:authorize="hasRole('ADMIN')">
+					<li> <a th:href="@{/admin/product}">Add Product</a></li>
+				</div>
+
+				<!--<li><a th:href="@{/cart}">Cart</a></li>
+				<li><a th:href="@{/checkout}">Checkout</a></li>-->
+			</ul>
+		</nav>
+
+	</div>
+
+	<script>
+		function toggleMenu() {
+			document.getElementById("nav-menu").classList.toggle("show-menu");
+		}
+	</script>
 
 </header>

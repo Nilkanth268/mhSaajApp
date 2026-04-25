@@ -1,154 +1,161 @@
-body{
-    margin:0;
+/* --- GLOBAL STYLES --- */
+body {
+    margin: 0;
     font-family: 'Segoe UI', sans-serif;
+    background-color: #fdfbf7; /* Light cream background */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* HEADER */
-
-header{
-    background: linear-gradient(135deg,#b8860b,#ffd700,#fff5cc);
-    padding:15px 30px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.2);
+/* --- HEADER --- */
+header {
+    background: linear-gradient(135deg, #b8860b, #ffd700, #fff5cc);
+    padding: 15px 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.header-container{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* LOGO */
-
-.logo{
-    font-size:26px;
-    font-weight:bold;
-    color:#4b2e00;
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #4b2e00;
 }
 
-/* NAVBAR */
-
-nav ul{
-    list-style:none;
-    display:flex;
-    gap:25px;
-    margin:0;
-    padding:0;
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
 }
 
-nav ul li a{
-    text-decoration:none;
-    font-size:18px;
-    color:#4b2e00;
-    font-weight:500;
-    transition:0.3s;
+nav ul li a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #4b2e00;
+    font-weight: 500;
+    transition: 0.3s;
 }
 
-nav ul li a:hover{
-    color:white;
-    text-shadow:0 0 8px gold;
+nav ul li a:hover {
+    color: white;
+    text-shadow: 0 0 8px gold;
 }
 
-/* MOBILE MENU ICON */
-
-.menu-toggle{
-    display:none;
-    font-size:26px;
-    cursor:pointer;
+.menu-toggle {
+    display: none;
+    font-size: 26px;
+    cursor: pointer;
 }
 
-/* MOBILE RESPONSIVE */
+/* --- LOGIN PAGE SECTION --- */
+.login-wrapper {
+    flex: 1; /* Pushes footer to the bottom */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
-@media (max-width:768px){
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    border-top: 5px solid #b8860b;
+}
 
-    nav{
-        position:absolute;
-        top:65px;
-        right:0;
-        background:#fff8dc;
-        width:200px;
-        display:none;
-        box-shadow:0 5px 15px rgba(0,0,0,0.2);
+.login-card h2 {
+    color: #4b2e00;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #b8860b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #8b6508;
+}
+
+/* --- FOOTER --- */
+footer {
+    background: #4b2e00;
+    color: white;
+    padding: 30px 20px;
+    margin-top: auto; /* Keeps footer at bottom */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 768px) {
+    nav {
+        position: absolute;
+        top: 65px;
+        right: 0;
+        background: #fff8dc;
+        width: 200px;
+        display: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-
-    nav ul{
-        flex-direction:column;
-        padding:10px;
+    nav ul {
+        flex-direction: column;
+        padding: 10px;
     }
-
-    nav ul li{
-        padding:10px 0;
+    .menu-toggle {
+        display: block;
     }
-
-    .menu-toggle{
-        display:block;
+    .footer-container {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
     }
-
 }
 
-/* SHOW MENU */
-
-.show-menu{
-    display:block;
-}
-
-/* FOOTER */
-
-footer{
-    background:#4b2e00;
-    color:white;
-    padding:30px 20px;
-    margin-top:40px;
-}
-
-.footer-container{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-}
-
-.footer-brand{
-    font-size:18px;
-}
-
-.footer-brand p{
-    font-size:14px;
-    color:#ddd;
-}
-
-/* SOCIAL ICONS */
-
-.social-links{
-    display:flex;
-    gap:20px;
-}
-
-.social-links a{
-    font-size:28px;
-    color:white;
-    transition:0.3s;
-}
-
-.social-links a.instagram:hover{
-    color:#E1306C;
-}
-
-.social-links a.youtube:hover{
-    color:red;
-}
-
-.social-links a.whatsapp:hover{
-    color:#25D366;
-}
-
-/* MOBILE */
-
-@media (max-width:768px){
-
-.footer-container{
-    flex-direction:column;
-    gap:15px;
-    text-align:center;
-}
-
+.show-menu {
+    display: block;
 }
