@@ -6,42 +6,68 @@
 			💎 Mahalaxmi Saaj
 		</div>
 
-		<div class="menu-toggle " onclick="toggleMenu()">
+		<div class="menu-toggle" onclick="toggleMenu()">
 			☰
 		</div>
 
-	
 		<nav id="nav-menu">
+
 			<ul>
-				<li><a th:href="@{/products}">Collections</a></li>
 
+				<!-- COLLECTION -->
+				<li>
+					<a th:href="@{/products}">
+						Collections
+					</a>
+				</li>
 
-				<!-- Show only when logged in -->
-				<div sec:authorize="isAuthenticated()">
-					<li><a th:href="@{/logout}">Logout</a></li>
-				</div>
+				<!-- LOGIN -->
+				<li th:if="${session.userId == null}">
+					<a th:href="@{/login}">
+						Login
+					</a>
+				</li>
 
-				<!-- Show when NOT logged in -->
-				<div sec:authorize="isAnonymous()">
-					<li><a th:href="@{/login}">Login</a></li>
-				</div>
+				<!-- LOGOUT -->
+				<li th:if="${session.userId != null}">
+					<a th:href="@{/logout}">
+						Logout
+					</a>
+				</li>
 
-				<!-- 👑 ONLY ADMIN -->
-				<div sec:authorize="hasRole('ADMIN')">
-					<li> <a th:href="@{/admin/product}">Add Product</a></li>
-				</div>
+				<!-- 👑 ADMIN ONLY -->
+				<li th:if="${session.role == 'ROLE_ADMIN'}">
 
-				<!--<li><a th:href="@{/cart}">Cart</a></li>
-				<li><a th:href="@{/checkout}">Checkout</a></li>-->
+					<a th:href="@{/user_form}">
+						Add Product
+					</a>
+
+				</li>
+
+				<li th:if="${session.userId == null}">
+
+					<a th:href="@{/user_form}">
+						Create User
+					</a>
+
+				</li>
+
 			</ul>
+
 		</nav>
 
 	</div>
 
 	<script>
+
 		function toggleMenu() {
-			document.getElementById("nav-menu").classList.toggle("show-menu");
+
+			document
+				.getElementById("nav-menu")
+				.classList
+				.toggle("show-menu");
 		}
+
 	</script>
 
 </header>

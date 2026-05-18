@@ -9,10 +9,51 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 	<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+<script>
+
+    setTimeout(() => {
+
+        let loginToast =
+            document.getElementById("loginToast");
+
+        let logoutToast =
+            document.getElementById("logoutToast");
+
+        if(loginToast){
+
+            loginToast.style.display = "none";
+        }
+
+        if(logoutToast){
+
+            logoutToast.style.display = "none";
+        }
+
+    }, 3000);
+
+</script>
 
 <body>
 
-	<div th:replace="fragment/header :: header"></div>
+	<div th:replace="~{fragment/header :: header}"></div>
+	<!-- LOGIN MESSAGE -->
+	<!-- LOGIN SUCCESS -->
+	<div id="loginToast"
+	     class="toast success"
+	     th:if="${loginMsg != null}">
+
+	    <p th:text="${loginMsg}"></p>
+
+	</div>
+
+	<!-- LOGOUT SUCCESS -->
+	<div id="logoutToast"
+	     class="toast logout"
+	     th:if="${logoutMsg != null}">
+
+	    <p th:text="${logoutMsg}"></p>
+
+	</div>
 
 	<main>
 
@@ -21,7 +62,7 @@
 
 	
 	</main>
-	<div th:replace="fragment/footer :: footer"></div>
+	<div th:replace="~{fragment/footer :: footer}"></div>
 </body>
 
 </html>

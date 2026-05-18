@@ -37,7 +37,7 @@ public class ProductController {
 	}
 
 	@PostMapping("/admin/save_product")
-	public String saveProduct(Product product, Model model) {
+	public String saveProduct(Product product, Model model) { // when save btn is et pressed 
 
 		System.out.println("Save Product Method " + product);
 		try {
@@ -45,6 +45,7 @@ public class ProductController {
 			if (product != null) {
 				System.out.println("Product Object Service send :" + product);
 				productService.saveProductService(product);
+				
 				return "product_form";
 			}
 
@@ -60,6 +61,7 @@ public class ProductController {
 			model.addAttribute("errMsg", errMsg);
 
 		}
+		
 		return "product_form";
 	}
 	

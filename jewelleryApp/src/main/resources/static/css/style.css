@@ -159,3 +159,69 @@ footer {
 .show-menu {
     display: block;
 }
+
+.toast {
+
+    position: fixed;
+
+    top: 20px;
+    right: 20px;
+
+    min-width: 150px;
+
+    padding: 8px 10px;
+
+    border-radius: 11px;
+
+    color: white;
+
+    font-weight: bold;
+
+    box-shadow:
+        0px 8px 20px rgba(0,0,0,0.25);
+
+    z-index: 9999;
+
+    animation:
+        slideIn 0.5s ease,
+        fadeOut 0.5s ease 2.5s forwards;
+}
+
+/* LOGIN */
+.success {
+
+    background: #28a745;
+}
+
+/* LOGOUT */
+.logout {
+
+    background: #dc3545;
+}
+
+/* ANIMATION */
+@keyframes slideIn {
+
+    from {
+
+        opacity: 0;
+        transform:
+            translateY(-20px);
+    }
+
+    to {
+
+        opacity: 1;
+        transform:
+            translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+
+    to {
+
+        opacity: 0;
+        visibility: hidden;
+    }
+}
