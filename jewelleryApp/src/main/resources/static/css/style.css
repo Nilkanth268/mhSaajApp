@@ -225,3 +225,38 @@ footer {
         visibility: hidden;
     }
 }
+/* HERO BANNER */
+
+.hero-banner {
+
+    width: 100%;
+
+    overflow: hidden;
+
+    margin-bottom: 30px;
+}
+
+.hero-banner img {
+
+    width: 100%;
+
+    height: auto;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 0px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .hero-banner img {
+
+        width: 100%;
+
+        height: auto;
+    }
+}

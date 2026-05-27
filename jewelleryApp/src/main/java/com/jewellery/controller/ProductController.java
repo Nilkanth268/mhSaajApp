@@ -15,14 +15,9 @@ import com.jewellery.service.ProductService;
 @Controller
 public class ProductController {
 
-	private final HomeControler homeControler;
 
 	@Autowired
 	private ProductService productService;
-
-	ProductController(HomeControler homeControler) {
-		this.homeControler = homeControler;
-	}
 
 	String errMsg = "";
 
@@ -72,7 +67,7 @@ public class ProductController {
 		
 		model.addAttribute("product", prodList);		
 				
-		return "product-list";
+		return "productList";
 
 	}
 
