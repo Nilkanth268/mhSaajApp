@@ -1,6 +1,8 @@
 package com.jewellery.model;
-
 import java.security.Timestamp;
+
+import org.springframework.data.annotation.Transient;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +19,16 @@ public class Product {
 	private String pCode;
 	private String pName;
 	private String pCategory;
-	private String description;
+	private String pDescription;
 	private Double pAmount;
 	private Timestamp pCrDate;
+	
+	//FileName
+	@Transient
+	private MultipartFile imageFile;
+	
+	//DBField
+	private String imageName;
 
 	private Timestamp pUpDate;
 	private Integer pCrId;
@@ -49,11 +58,11 @@ public class Product {
 	}
 
 	public String getPDescription() {
-		return description;
+		return pDescription;
 	}
 
-	public void setPDescription(String description) {
-		this.description = description;
+	public void setPDescription(String pDescription) {
+		this.pDescription = pDescription;
 	}
 
 	public Double getPAmount() {
@@ -86,6 +95,22 @@ public class Product {
 
 	public void setpCrId(Integer pCrId) {
 		this.pCrId = pCrId;
+	}
+
+	public MultipartFile getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(MultipartFile imageFile) {
+		this.imageFile = imageFile;
+	}
+
+	public String getImageName() {
+		return imageName;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
 	}
 
 }

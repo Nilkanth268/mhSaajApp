@@ -56,7 +56,7 @@ nav ul li a:hover {
 
 /* --- LOGIN PAGE SECTION --- */
 .login-wrapper {
-    flex: 1; /* Pushes footer to the bottom */
+    flex: 1; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -121,7 +121,7 @@ footer {
     background: #4b2e00;
     color: white;
     padding: 30px 20px;
-    margin-top: auto; /* Keeps footer at bottom */
+    margin-top: auto; 
 }
 
 .footer-container {
@@ -161,102 +161,41 @@ footer {
 }
 
 .toast {
-
     position: fixed;
-
     top: 20px;
     right: 20px;
-
     min-width: 150px;
-
     padding: 8px 10px;
-
     border-radius: 11px;
-
     color: white;
-
     font-weight: bold;
-
-    box-shadow:
-        0px 8px 20px rgba(0,0,0,0.25);
-
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.25);
     z-index: 9999;
-
-    animation:
-        slideIn 0.5s ease,
-        fadeOut 0.5s ease 2.5s forwards;
+    animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
 }
 
-/* LOGIN */
-.success {
+.success { background: #28a745; }
+.logout { background: #dc3545; }
 
-    background: #28a745;
-}
-
-/* LOGOUT */
-.logout {
-
-    background: #dc3545;
-}
-
-/* ANIMATION */
 @keyframes slideIn {
-
-    from {
-
-        opacity: 0;
-        transform:
-            translateY(-20px);
-    }
-
-    to {
-
-        opacity: 1;
-        transform:
-            translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeOut {
-
-    to {
-
-        opacity: 0;
-        visibility: hidden;
-    }
+    to { opacity: 0; visibility: hidden; }
 }
+
 /* HERO BANNER */
-
 .hero-banner {
-
     width: 100%;
-
     overflow: hidden;
-
     margin-bottom: 30px;
 }
 
 .hero-banner img {
-
     width: 100%;
-
     height: auto;
-
     display: block;
-
     object-fit: cover;
-
-    border-radius: 0px;
-}
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-    .hero-banner img {
-
-        width: 100%;
-
-        height: auto;
-    }
 }

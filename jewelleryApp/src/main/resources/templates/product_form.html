@@ -3,244 +3,238 @@
 
 <head>
 
-    <!-- META -->
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+	<!-- META -->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Add Product</title>
+	<title>Add Product</title>
 
-    <!-- BOOTSTRAP -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-    <!-- FONT AWESOME -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<!-- FONT AWESOME -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- CUSTOM CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/style.css}">
+	<!-- CUSTOM CSS -->
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 
-    <!-- PAGE CSS -->
-    <style>
+	<!-- PAGE CSS -->
+	<style>
+		body {
 
-        body {
+			background-color: #f5f5f5;
+		}
 
-            background-color: #f5f5f5;
-        }
+		.product-container {
 
-        .product-container {
+			margin-top: 40px;
+			margin-bottom: 40px;
+		}
 
-            margin-top: 40px;
-            margin-bottom: 40px;
-        }
+		.product-card {
 
-        .product-card {
+			background: #ffffff;
 
-            background: #ffffff;
+			border-radius: 18px;
 
-            border-radius: 18px;
+			padding: 30px;
 
-            padding: 30px;
+			box-shadow:
+				0px 5px 20px rgba(0, 0, 0, 0.10);
+		}
 
-            box-shadow:
-                0px 5px 20px rgba(0, 0, 0, 0.10);
-        }
+		.page-title {
 
-        .page-title {
+			text-align: center;
 
-            text-align: center;
+			font-weight: bold;
 
-            font-weight: bold;
+			margin-bottom: 30px;
 
-            margin-bottom: 30px;
+			color: #333;
+		}
 
-            color: #333;
-        }
+		.form-label {
 
-        .form-label {
+			font-weight: 600;
 
-            font-weight: 600;
+			margin-bottom: 8px;
+		}
 
-            margin-bottom: 8px;
-        }
+		.form-control,
+		.input-group-text {
 
-        .form-control,
-        .input-group-text {
+			border-radius: 10px;
+		}
 
-            border-radius: 10px;
-        }
+		.form-control {
 
-        .form-control {
+			padding: 12px;
+		}
 
-            padding: 12px;
-        }
+		textarea.form-control {
 
-        textarea.form-control {
+			resize: none;
+		}
 
-            resize: none;
-        }
+		.save-btn {
 
-        .save-btn {
+			width: 100%;
 
-            width: 100%;
+			padding: 12px;
 
-            padding: 12px;
+			font-size: 16px;
 
-            font-size: 16px;
+			font-weight: bold;
 
-            font-weight: bold;
+			border-radius: 10px;
+		}
 
-            border-radius: 10px;
-        }
+		/* MOBILE */
+		@media (max-width: 768px) {
 
-        /* MOBILE */
-        @media (max-width: 768px) {
+			.product-card {
 
-            .product-card {
+				padding: 20px;
+			}
 
-                padding: 20px;
-            }
+			.page-title {
 
-            .page-title {
-
-                font-size: 24px;
-            }
-        }
-
-    </style>
+				font-size: 24px;
+			}
+		}
+	</style>
 
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <div th:replace="~{fragment/header :: header}">
-    </div>
+	<!-- HEADER -->
+	<div th:replace="~{fragment/header :: header}">
+	</div>
 
-    <!-- MAIN CONTAINER -->
-    <div class="container product-container">
+	<!-- MAIN CONTAINER -->
+	<div class="container product-container">
 
-        <div class="row justify-content-center">
+		<div class="row justify-content-center">
 
-            <div class="col-lg-7 col-md-9 col-sm-12">
+			<div class="col-lg-7 col-md-9 col-sm-12">
 
-                <!-- CARD -->
-                <div class="product-card">
+				<!-- CARD -->
+				<div class="product-card">
 
-                    <!-- TITLE -->
-                    <h2 class="page-title">
-                        Add Product
-                    </h2>
+					<!-- TITLE -->
+					<h2 class="page-title">
+						Add Product
+					</h2>
 
-                    <!-- FORM -->
-                    <form th:action="@{/admin/save_product}"
-                          th:object="${product}"
-                          method="post">
+					<!-- FORM -->
+					<form th:action="@{/admin/save_product}" th:object="${product}" method="post"
+						enctype="multipart/form-data">
 
-                        <!-- PRODUCT CODE -->
-                        <div class="mb-3">
+						<!-- PRODUCT CODE -->
+						<div class="mb-3">
 
-                            <label class="form-label">
-                                Product Code
-                            </label>
+							<label class="form-label">
+								Product Code
+							</label>
 
-                            <input type="text"
-                                   th:field="*{pCode}"
-                                   class="form-control"
-                                   placeholder="Enter Product Code">
+							<input type="text" th:field="*{pCode}" class="form-control"
+								placeholder="Enter Product Code">
 
-                        </div>
+						</div>
 
-                        <!-- PRODUCT NAME -->
-                        <div class="mb-3">
+						<!-- PRODUCT NAME -->
+						<div class="mb-3">
 
-                            <label class="form-label">
-                                Product Name
-                            </label>
+							<label class="form-label">
+								Product Name
+							</label>
 
-                            <input type="text"
-                                   th:field="*{pName}"
-                                   class="form-control"
-                                   placeholder="Enter Product Name">
+							<input type="text" th:field="*{pName}" class="form-control"
+								placeholder="Enter Product Name">
 
-                        </div>
+						</div>
 
-                        <!-- PRODUCT CATEGORY -->
-                        <div class="mb-3">
+						<!-- PRODUCT CATEGORY -->
+						<div class="mb-3">
 
-                            <label class="form-label">
-                                Product Category
-                            </label>
+							<label class="form-label">
+								Product Category
+							</label>
 
-                            <input type="text"
-                                   th:field="*{pCategory}"
-                                   class="form-control"
-                                   placeholder="Enter Product Category">
+							<input type="text" th:field="*{pCategory}" class="form-control"
+								placeholder="Enter Product Category">
 
-                        </div>
+						</div>
 
-                        <!-- PRODUCT DESCRIPTION -->
-                        <div class="mb-3">
+						<!-- PRODUCT DESCRIPTION -->
+						<div class="mb-3">
 
-                            <label class="form-label">
-                                Description
-                            </label>
+							<label class="form-label">
+								Description
+							</label>
 
-                            <textarea th:field="*{pDescription}"
-                                      class="form-control"
-                                      rows="4"
-                                      placeholder="Enter Product Description">
+							<textarea th:field="*{pDescription}" class="form-control" rows="4"
+								placeholder="Enter Product Description">
                             </textarea>
 
-                        </div>
+						</div>
 
-                        <!-- PRODUCT PRICE -->
-                        <div class="mb-4">
+						<!-- PRODUCT PRICE -->
+						<div class="mb-4">
 
-                            <label class="form-label">
-                                Price
-                            </label>
+							<label class="form-label">
+								Price
+							</label>
 
-                            <div class="input-group">
+							<div class="input-group">
 
-                                <span class="input-group-text">
-                                    ₹
-                                </span>
+								<span class="input-group-text">
+									₹
+								</span>
 
-                                <input type="number"
-                                       th:field="*{pAmount}"
-                                       class="form-control"
-                                       placeholder="0.00">
+								<input type="number" th:field="*{pAmount}" class="form-control" placeholder="0.00">
 
-                            </div>
+							</div>
 
-                        </div>
+						</div>
 
-                        <!-- SAVE BUTTON -->
-                        <button type="submit"
-                                class="btn btn-success save-btn">
+						<!-- PRODUCT IMAGE -->
+						<div class="mb-3">
 
-                            <i class="fa-solid fa-floppy-disk"></i>
+							<label class="form-label">
 
-                            Save Product
+								Product Image
 
-                        </button>
+							</label>
 
-                    </form>
+							<input type="file" th:field="*{imageFile}" class="form-control">
 
-                </div>
+						</div>
 
-            </div>
+						<!-- SAVE BUTTON -->
+						<button type="submit" class="btn btn-success save-btn">
 
-        </div>
+							<i class="fa-solid fa-floppy-disk"></i>
 
-    </div>
+							Save Product
 
-    <!-- FOOTER -->
-    <div th:replace="~{fragment/footer :: footer}">
-    </div>
+						</button>
+
+					</form>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- FOOTER -->
+	<div th:replace="~{fragment/footer :: footer}">
+	</div>
 
 </body>
 

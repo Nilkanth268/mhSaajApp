@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.jewellery.model.Product;
 import com.jewellery.service.ProductService;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Controller
 public class ProductController {
-
 
 	@Autowired
 	private ProductService productService;
@@ -32,16 +37,37 @@ public class ProductController {
 	}
 
 	@PostMapping("/admin/save_product")
-	public String saveProduct(Product product, Model model) { // when save btn is et pressed 
+	public String saveProduct(Product product, Model model) { // when save btn is et pressed
 
 		System.out.println("Save Product Method " + product);
 		try {
 
 			if (product != null) {
 				System.out.println("Product Object Service send :" + product);
+
+				// IMAGE FILE
+				MultipartFile file = product.getImageFile();
+
+				if (file != null && !file.isEmpty()) {
+
+					// IMAGE NAME
+					String fileName = file.getOriginalFilename();
+
+					// SAVE NAME IN PRODUCT
+					product.setImageName(fileName);
+
+					// FOLDER PATH
+					String uploadDir = "src/main/resources/static/images/";
+
+					// SAVE FILE
+					Path path = Paths.get(uploadDir + fileName);
+
+					Files.write(path, file.getBytes());
+				}
+
 				productService.saveProductService(product);
-				
-				return "product_form";
+
+				return "redirect:/products";
 			}
 
 		} catch (Exception e) {
@@ -56,17 +82,17 @@ public class ProductController {
 			model.addAttribute("errMsg", errMsg);
 
 		}
-		
-		return "product_form";
+
+		return "home";
 	}
-	
+
 	@GetMapping("/products")
 	public String getAllProduct(Model model) {
-		
+
 		List<Product> prodList = productService.getAllProd();
-		
-		model.addAttribute("product", prodList);		
-				
+
+		model.addAttribute("product", prodList);
+
 		return "productList";
 
 	}

@@ -2,13 +2,16 @@ package com.jewellery.repository;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
+
 
 import com.jewellery.model.Product;
 
@@ -26,10 +29,26 @@ public class ProductRepository {
 
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
-			String productJsonObj = objectMapper.writeValueAsString(product);
-			System.out.println("productJsonObj: " + productJsonObj);
-			String sqlStr = "Call SAVE_PRODUCT(?)";
 
+			Map<String, Object> map = new HashMap<>();
+
+			map.put("pCode", product.getPCode());
+
+			map.put("pName", product.getPName());
+
+			map.put("pCategory", product.getPCategory());
+
+			map.put("pDescription", product.getPDescription());
+
+			map.put("pAmount", product.getPAmount());
+			
+			map.put("pCrId", product.getPAmount());
+
+			map.put("pImg", product.getImageName());
+
+			String productJsonObj = objectMapper.writeValueAsString(map);
+
+			String sqlStr = "CALL SAVE_PRODUCT(?)";
 			if (productJsonObj != null) {
 				jdbcTemplate.update(sqlStr, productJsonObj);
 			}
@@ -38,7 +57,6 @@ public class ProductRepository {
 		}
 	}
 
-	
 	public List<Product> getAllProductsRepo() {
 
 		System.out.println("getAllProducts method called ");
@@ -57,6 +75,7 @@ public class ProductRepository {
 					prod.setPCategory(rs.getString("pCat"));
 					prod.setPDescription(rs.getString("pDesc"));
 					prod.setPAmount(rs.getDouble("pAmt"));
+					prod.setImageName(rs.getString("pImage"));
 
 					pList.add(prod);
 				}
