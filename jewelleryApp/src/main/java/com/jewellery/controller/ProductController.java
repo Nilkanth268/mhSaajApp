@@ -92,6 +92,7 @@ public class ProductController {
 		List<Product> prodList = productService.getAllProd();
 
 		model.addAttribute("product", prodList);
+		System.out.println(prodList);
 
 		return "productList";
 

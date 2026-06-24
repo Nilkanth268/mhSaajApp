@@ -70,6 +70,7 @@ public class ProductRepository {
 				while (rs.next()) {
 
 					Product prod = new Product();
+					prod.setpId(rs.getInt("pId"));
 					prod.setPCode(rs.getString("pCd"));
 					prod.setPName(rs.getString("pName"));
 					prod.setPCategory(rs.getString("pCat"));
