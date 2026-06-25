@@ -115,11 +115,11 @@ public class Product {
 		this.imageName = imageName;
 	}
 
-	public Integer getpId() {
+	public Integer getPid() {
 		return pId;
 	}
 
-	public void setpId(Integer pId) {
+	public void setPid(Integer pId) {
 		this.pId = pId;
 	}
 

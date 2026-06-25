@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 import com.jewellery.model.Product;
 
 import tools.jackson.databind.ObjectMapper;
@@ -41,7 +40,7 @@ public class ProductRepository {
 			map.put("pDescription", product.getPDescription());
 
 			map.put("pAmount", product.getPAmount());
-			
+
 			map.put("pCrId", product.getPAmount());
 
 			map.put("pImg", product.getImageName());
@@ -70,7 +69,7 @@ public class ProductRepository {
 				while (rs.next()) {
 
 					Product prod = new Product();
-					prod.setpId(rs.getInt("pId"));
+					prod.setPid(rs.getInt("pId"));
 					prod.setPCode(rs.getString("pCd"));
 					prod.setPName(rs.getString("pName"));
 					prod.setPCategory(rs.getString("pCat"));
@@ -88,6 +87,45 @@ public class ProductRepository {
 
 		return pList;
 
+	}
+
+	public Product getProductByIdRepo(Integer pId) {
+
+		System.out.println("getProducts By ID method called ");
+		Product prod = new Product();
+
+		try {
+			String sqlStr = "CALL PRODUCT_BY_ID(?)";
+
+			jdbcTemplate.query(sqlStr, ps -> ps.setInt(1, pId), (ResultSetExtractor<Void>) rs -> {
+
+				if (rs.next()) {
+
+					prod.setPid(rs.getInt("pId"));
+					prod.setPCode(rs.getString("pCd"));
+					prod.setPName(rs.getString("pName"));
+					prod.setPCategory(rs.getString("pCat"));
+					prod.setPDescription(rs.getString("pDesc"));
+					prod.setPAmount(rs.getDouble("pAmt"));
+					prod.setImageName(rs.getString("pImage"));
+				}
+
+				return null;
+			});
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return prod;
+
+	}
+
+	public int deleteProductRepo(Integer pId) {
+
+	    String sql = "CALL DELETE_PRODUCT_BY_ID(?)";
+
+	    return jdbcTemplate.update(sql, pId);
 	}
 
 }

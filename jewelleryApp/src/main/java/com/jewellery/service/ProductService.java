@@ -10,7 +10,7 @@ import com.jewellery.repository.ProductRepository;
 
 @Service
 public class ProductService {
-	
+
 	String result = "";
 
 	@Autowired
@@ -27,10 +27,25 @@ public class ProductService {
 		}
 		return result;
 	}
-	
-	public List<Product> getAllProd(){
-		
+
+	public List<Product> getAllProd() {
+
 		return productRepository.getAllProductsRepo();
 	}
 
+	public Product getProdById(Integer pId) {
+		return productRepository.getProductByIdRepo(pId);
+	}
+
+	public boolean delProdById(Integer pId) {
+
+		Product product = productRepository.getProductByIdRepo(pId);
+		if (product == null) {
+			return false;
+		}
+
+		productRepository.deleteProductRepo(pId);
+
+		return true;
+	}
 }
