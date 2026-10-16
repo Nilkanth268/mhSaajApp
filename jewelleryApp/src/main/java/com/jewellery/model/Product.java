@@ -1,5 +1,8 @@
 package com.jewellery.model;
+
 import java.security.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.Transient;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,16 +27,20 @@ public class Product {
 	private String pDescription;
 	private Double pAmount;
 	private Timestamp pCrDate;
-	
-	//FileName
+
+	// FileName
 	@Transient
 	private MultipartFile imageFile;
-	
-	//DBField
+
+	// DBField
 	private String imageName;
 
 	private Timestamp pUpDate;
 	private Integer pCrId;
+
+	// Add these two fields and their getters/setters in Product.java
+	private MultipartFile[] imageFiles;
+	private List<String> imageList = new ArrayList<>();
 
 	public String getPCode() {
 		return pCode;
@@ -115,12 +122,28 @@ public class Product {
 		this.imageName = imageName;
 	}
 
-	public Integer getPid() {
+	public Integer getPId() {
 		return pId;
 	}
 
-	public void setPid(Integer pId) {
+	public void setPId(Integer pId) {
 		this.pId = pId;
+	}
+
+	public MultipartFile[] getImageFiles() {
+		return imageFiles;
+	}
+
+	public void setImageFiles(MultipartFile[] imageFiles) {
+		this.imageFiles = imageFiles;
+	}
+
+	public List<String> getImageList() {
+		return imageList;
+	}
+
+	public void setImageList(List<String> imageList) {
+		this.imageList = imageList;
 	}
 
 }

@@ -2,12 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
 	<!-- META -->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Add Product</title>
+	<title>Add Product - Maharashtrian Saaj</title>
 
 	<!-- BOOTSTRAP -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -21,97 +20,239 @@
 	<!-- PAGE CSS -->
 	<style>
 		body {
-
 			background-color: #f5f5f5;
 		}
 
 		.product-container {
-
-			margin-top: 40px;
-			margin-bottom: 40px;
+			margin-top: 35px;
+			margin-bottom: 50px;
 		}
 
 		.product-card {
-
 			background: #ffffff;
-
 			border-radius: 18px;
-
-			padding: 30px;
-
-			box-shadow:
-				0px 5px 20px rgba(0, 0, 0, 0.10);
+			padding: 32px;
+			box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.08);
+			border-top: 5px solid #ffc107;
 		}
 
 		.page-title {
-
 			text-align: center;
+			font-weight: 800;
+			margin-bottom: 8px;
+			color: #222;
+		}
 
-			font-weight: bold;
-
-			margin-bottom: 30px;
-
-			color: #333;
+		.page-subtitle {
+			text-align: center;
+			color: #777;
+			font-size: 0.92rem;
+			margin-bottom: 28px;
 		}
 
 		.form-label {
-
 			font-weight: 600;
+			margin-bottom: 6px;
+			color: #333;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
 
-			margin-bottom: 8px;
+		.char-count {
+			font-size: 0.75rem;
+			font-weight: 500;
+			color: #888;
 		}
 
 		.form-control,
 		.input-group-text {
-
 			border-radius: 10px;
 		}
 
 		.form-control {
-
 			padding: 12px;
+			border: 1.5px solid #dee2e6;
+			transition: all 0.2s ease;
+		}
+
+		.form-control:focus {
+			border-color: #ffc107;
+			box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
 		}
 
 		textarea.form-control {
-
 			resize: none;
 		}
 
-		.save-btn {
-
-			width: 100%;
-
-			padding: 12px;
-
-			font-size: 16px;
-
-			font-weight: bold;
-
-			border-radius: 10px;
+		/* QUICK-TAP CATEGORY PILLS */
+		.category-pills {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin-top: 8px;
 		}
 
-		/* MOBILE */
-		@media (max-width: 768px) {
+		.cat-pill {
+			background: #fff8e1;
+			border: 1px solid #ffe082;
+			color: #5d4037;
+			padding: 5px 12px;
+			border-radius: 20px;
+			font-size: 0.82rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			user-select: none;
+		}
 
-			.product-card {
+		.cat-pill:hover,
+		.cat-pill.active-pill {
+			background: #ffc107;
+			border-color: #ffc107;
+			color: #000;
+			transform: translateY(-1px);
+		}
 
-				padding: 20px;
+		/* INTERACTIVE UPLOAD DROPZONE (PC & MOBILE) */
+		.upload-dropzone {
+			border: 2px dashed #ffc107;
+			background: #fffdf6;
+			border-radius: 14px;
+			padding: 25px 15px;
+			text-align: center;
+			cursor: pointer;
+			transition: all 0.25s ease;
+			position: relative;
+		}
+
+		.upload-dropzone:hover,
+		.upload-dropzone.dragover {
+			background: #fff8e1;
+			border-color: #e0a800;
+			transform: scale(1.01);
+		}
+
+		.upload-icon {
+			font-size: 2.2rem;
+			color: #ffc107;
+			margin-bottom: 8px;
+		}
+
+		/* LIVE IMAGE PREVIEW GRID */
+		.preview-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+			gap: 12px;
+			margin-top: 15px;
+		}
+
+		.preview-item {
+			position: relative;
+			height: 95px;
+			border-radius: 10px;
+			overflow: hidden;
+			border: 2px solid #e9ecef;
+			box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+			animation: fadeInScale 0.25s ease;
+		}
+
+		.preview-item.cover-photo {
+			border-color: #ffc107;
+		}
+
+		.preview-item img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.cover-badge {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: rgba(255, 193, 7, 0.92);
+			color: #000;
+			font-size: 0.68rem;
+			font-weight: 700;
+			text-align: center;
+			padding: 2px 0;
+		}
+
+		.remove-img-btn {
+			position: absolute;
+			top: 4px;
+			right: 4px;
+			width: 24px;
+			height: 24px;
+			border-radius: 50%;
+			background: rgba(220, 53, 69, 0.9);
+			color: #fff;
+			border: none;
+			font-size: 0.75rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: transform 0.15s ease;
+		}
+
+		.remove-img-btn:hover {
+			transform: scale(1.15);
+			background: #dc3545;
+		}
+
+		@keyframes fadeInScale {
+			from {
+				opacity: 0;
+				transform: scale(0.85);
 			}
+			to {
+				opacity: 1;
+				transform: scale(1);
+			}
+		}
 
+		.save-btn {
+			width: 100%;
+			padding: 13px;
+			font-size: 16px;
+			font-weight: bold;
+			border-radius: 10px;
+			transition: transform 0.15s ease;
+		}
+
+		.save-btn:active {
+			transform: scale(0.98);
+		}
+
+		/* MOBILE ADJUSTMENTS */
+		@media (max-width: 768px) {
+			.product-container {
+				margin-top: 20px;
+			}
+			.product-card {
+				padding: 20px 16px;
+			}
 			.page-title {
-
-				font-size: 24px;
+				font-size: 22px;
+			}
+			.preview-grid {
+				grid-template-columns: repeat(4, 1fr);
+				gap: 8px;
+			}
+			.preview-item {
+				height: 78px;
 			}
 		}
 	</style>
-
 </head>
 
 <body>
 
 	<!-- HEADER -->
-	<div th:replace="~{fragment/header :: header}">
-	</div>
+	<div th:replace="~{fragment/header :: header}"></div>
 
 	<!-- MAIN CONTAINER -->
 	<div class="container product-container">
@@ -123,103 +264,124 @@
 				<!-- CARD -->
 				<div class="product-card">
 
-					<!-- TITLE -->
 					<h2 class="page-title">
-						Add Product
+						💎 Add New Jewellery
 					</h2>
+					<p class="page-subtitle">
+						Upload product details and at least 4 angles for the customer gallery
+					</p>
+
+					<!-- ERROR ALERT IF ANY -->
+					<div th:if="${errMsg != null and errMsg != ''}" class="alert alert-danger py-2">
+						<i class="fa-solid fa-circle-exclamation me-1"></i>
+						<span th:text="${errMsg}"></span>
+					</div>
 
 					<!-- FORM -->
-					<form th:action="@{/admin/save_product}" th:object="${product}" method="post"
+					<form id="productForm" th:action="@{/admin/save_product}" th:object="${product}" method="post"
 						enctype="multipart/form-data">
 
-						<!-- PRODUCT CODE -->
-						<div class="mb-3">
+						<div class="row">
+							<!-- PRODUCT CODE -->
+							<div class="col-sm-5 mb-3">
+								<label class="form-label">
+									<span>Product Code</span>
+									<span class="char-count" id="codeCount">0/10</span>
+								</label>
+								<input type="text" th:field="*{pCode}" id="pCodeInput" class="form-control"
+									maxlength="10" placeholder="e.g. MSJ-101" required
+									oninput="updateCharCount(this, 'codeCount', 10)">
+							</div>
 
-							<label class="form-label">
-								Product Code
-							</label>
-
-							<input type="text" th:field="*{pCode}" class="form-control"
-								placeholder="Enter Product Code">
-
+							<!-- PRODUCT NAME -->
+							<div class="col-sm-7 mb-3">
+								<label class="form-label">
+									<span>Product Name</span>
+									<span class="char-count" id="nameCount">0/50</span>
+								</label>
+								<input type="text" th:field="*{pName}" id="pNameInput" class="form-control"
+									maxlength="50" placeholder="e.g. Royal Peshwai Nath" required
+									oninput="updateCharCount(this, 'nameCount', 50)">
+							</div>
 						</div>
 
-						<!-- PRODUCT NAME -->
+						<!-- PRODUCT CATEGORY (Input + Quick Tap Pills for Mobile) -->
 						<div class="mb-3">
-
 							<label class="form-label">
-								Product Name
+								<span>Product Category</span>
+								<span class="char-count" id="catCount">0/10</span>
 							</label>
+							<input type="text" th:field="*{pCategory}" id="pCategoryInput" class="form-control"
+								maxlength="10" placeholder="Select below or type category" required
+								oninput="updateCharCount(this, 'catCount', 10)">
 
-							<input type="text" th:field="*{pName}" class="form-control"
-								placeholder="Enter Product Name">
-
-						</div>
-
-						<!-- PRODUCT CATEGORY -->
-						<div class="mb-3">
-
-							<label class="form-label">
-								Product Category
-							</label>
-
-							<input type="text" th:field="*{pCategory}" class="form-control"
-								placeholder="Enter Product Category">
-
+							<!-- Quick Tap Category Pills -->
+							<div class="category-pills">
+								<span class="cat-pill" onclick="selectCategory('Nath', this)">Nath</span>
+								<span class="cat-pill" onclick="selectCategory('Thushi', this)">Thushi</span>
+								<span class="cat-pill" onclick="selectCategory('Saaj', this)">Saaj</span>
+								<span class="cat-pill" onclick="selectCategory('Necklace', this)">Necklace</span>
+								<span class="cat-pill" onclick="selectCategory('Earrings', this)">Earrings</span>
+								<span class="cat-pill" onclick="selectCategory('Bangles', this)">Bangles</span>
+								<span class="cat-pill" onclick="selectCategory('Ring', this)">Ring</span>
+							</div>
 						</div>
 
 						<!-- PRODUCT DESCRIPTION -->
 						<div class="mb-3">
-
 							<label class="form-label">
-								Description
+								<span>Description</span>
+								<span class="char-count" id="descCount">0/70</span>
 							</label>
-
-							<textarea th:field="*{pDescription}" class="form-control" rows="4"
-								placeholder="Enter Product Description">
-                            </textarea>
-
+							<textarea th:field="*{pDescription}" id="pDescInput" class="form-control" rows="3"
+								maxlength="70" placeholder="Enter material, finish & design highlights..." required
+								oninput="updateCharCount(this, 'descCount', 70)"></textarea>
 						</div>
 
 						<!-- PRODUCT PRICE -->
 						<div class="mb-4">
-
 							<label class="form-label">
-								Price
+								<span>Price</span>
+								<span id="priceFormatted" class="text-warning fw-bold small"></span>
 							</label>
-
 							<div class="input-group">
-
-								<span class="input-group-text">
-									₹
-								</span>
-
-								<input type="number" th:field="*{pAmount}" class="form-control" placeholder="0.00">
-
+								<span class="input-group-text bg-warning text-dark fw-bold">₹</span>
+								<input type="number" step="0.01" min="1" th:field="*{pAmount}" id="pAmountInput"
+									class="form-control" placeholder="0.00" required
+									oninput="formatLivePrice(this.value)">
 							</div>
-
 						</div>
 
-						<!-- PRODUCT IMAGE -->
-						<div class="mb-3">
-
+						<!-- MULTI-IMAGE INTERACTIVE UPLOADER -->
+						<div class="mb-4">
 							<label class="form-label">
-
-								Product Image
-
+								<span>Product Photos (Select 4+ Images)</span>
+								<span id="photoCounterBadge" class="badge bg-secondary">0 Selected</span>
 							</label>
 
-							<input type="file" th:field="*{imageFile}" class="form-control">
+							<!-- Hidden actual file input bound to Product.imageFiles -->
+							<input type="file" th:field="*{imageFiles}" id="imageInput" class="d-none"
+								accept="image/*" multiple>
 
+							<!-- Interactive Tap / Drag & Drop Zone -->
+							<div class="upload-dropzone" id="dropzone" onclick="document.getElementById('imageInput').click()">
+								<div class="upload-icon">
+									<i class="fa-solid fa-cloud-arrow-up"></i>
+								</div>
+								<h6 class="fw-bold mb-1 text-dark">Tap to select photos or Drag & Drop here</h6>
+								<small class="text-muted d-block">
+									You can pick multiple photos at once or add them one by one
+								</small>
+							</div>
+
+							<!-- Live Thumbnail Previews -->
+							<div id="previewGrid" class="preview-grid"></div>
 						</div>
 
 						<!-- SAVE BUTTON -->
-						<button type="submit" class="btn btn-success save-btn">
-
-							<i class="fa-solid fa-floppy-disk"></i>
-
+						<button type="submit" id="submitBtn" class="btn btn-warning save-btn shadow-sm">
+							<i class="fa-solid fa-floppy-disk me-1"></i>
 							Save Product
-
 						</button>
 
 					</form>
@@ -233,8 +395,136 @@
 	</div>
 
 	<!-- FOOTER -->
-	<div th:replace="~{fragment/footer :: footer}">
-	</div>
+	<div th:replace="~{fragment/footer :: footer}"></div>
+
+	<!-- INTERACTIVE FORM SCRIPT -->
+	<script>
+		// Holds selected files so mobile users can add photos in multiple taps without losing earlier ones
+		const dataTransfer = new DataTransfer();
+		const imageInput = document.getElementById("imageInput");
+		const dropzone = document.getElementById("dropzone");
+		const previewGrid = document.getElementById("previewGrid");
+		const photoBadge = document.getElementById("photoCounterBadge");
+
+		// 1. Live Character Counter
+		function updateCharCount(inputEl, counterId, maxLen) {
+			const countEl = document.getElementById(counterId);
+			if (countEl) {
+				countEl.innerText = `${inputEl.value.length}/${maxLen}`;
+			}
+		}
+
+		// 2. Quick-Tap Category Pill Selector
+		function selectCategory(categoryName, pillEl) {
+			const input = document.getElementById("pCategoryInput");
+			input.value = categoryName;
+			updateCharCount(input, "catCount", 10);
+
+			document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active-pill"));
+			pillEl.classList.add("active-pill");
+		}
+
+		// 3. Live Indian Rupee Price Preview (e.g., ₹ 12,500)
+		function formatLivePrice(val) {
+			const priceEl = document.getElementById("priceFormatted");
+			const num = parseFloat(val);
+			if (!isNaN(num) && num > 0) {
+				priceEl.innerText = "₹ " + num.toLocaleString("en-IN");
+			} else {
+				priceEl.innerText = "";
+			}
+		}
+
+		// 4. Handle File Selection (Appends new photos to existing list)
+		imageInput.addEventListener("change", (e) => {
+			addFilesToQueue(e.target.files);
+		});
+
+		// 5. PC Drag & Drop Support
+		dropzone.addEventListener("dragover", (e) => {
+			e.preventDefault();
+			dropzone.classList.add("dragover");
+		});
+
+		dropzone.addEventListener("dragleave", () => {
+			dropzone.classList.remove("dragover");
+		});
+
+		dropzone.addEventListener("drop", (e) => {
+			e.preventDefault();
+			dropzone.classList.remove("dragover");
+			if (e.dataTransfer.files.length > 0) {
+				addFilesToQueue(e.dataTransfer.files);
+			}
+		});
+
+		function addFilesToQueue(files) {
+			Array.from(files).forEach(file => {
+				if (file.type.startsWith("image/")) {
+					// Avoid duplicate file names
+					const exists = Array.from(dataTransfer.files).some(
+						f => f.name === file.name && f.size === file.size
+					);
+					if (!exists) {
+						dataTransfer.items.add(file);
+					}
+				}
+			});
+
+			imageInput.files = dataTransfer.files;
+			renderPreviews();
+		}
+
+		// 6. Remove a Single Image from Preview Queue
+		function removePhoto(index, event) {
+			event.stopPropagation();
+			dataTransfer.items.remove(index);
+			imageInput.files = dataTransfer.files;
+			renderPreviews();
+		}
+
+		// 7. Render Thumbnail Grid & Update Counter Badge
+		function renderPreviews() {
+			previewGrid.innerHTML = "";
+			const total = dataTransfer.files.length;
+
+			photoBadge.innerText = `${total} Selected`;
+			photoBadge.className = total >= 4
+				? "badge bg-success"
+				: (total > 0 ? "badge bg-warning text-dark" : "badge bg-secondary");
+
+			Array.from(dataTransfer.files).forEach((file, idx) => {
+				const reader = new FileReader();
+				const itemDiv = document.createElement("div");
+				itemDiv.className = idx === 0 ? "preview-item cover-photo" : "preview-item";
+
+				reader.onload = (e) => {
+					itemDiv.innerHTML = `
+						<img src="${e.target.result}" alt="Preview">
+						<button type="button" class="remove-img-btn" onclick="removePhoto(${idx}, event)" title="Remove Photo">
+							<i class="fa-solid fa-xmark"></i>
+						</button>
+						${idx === 0 ? '<div class="cover-badge">Main Cover</div>' : ''}
+					`;
+				};
+				reader.readAsDataURL(file);
+				previewGrid.appendChild(itemDiv);
+			});
+		}
+
+		// 8. Prevent Empty Image Submission & Show Loading Spinner on Mobile/PC
+		document.getElementById("productForm").addEventListener("submit", function (e) {
+			if (dataTransfer.files.length === 0) {
+				e.preventDefault();
+				alert("Please select at least 1 product image before saving.");
+				return;
+			}
+
+			const btn = document.getElementById("submitBtn");
+			btn.disabled = true;
+			btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Uploading & Saving...`;
+		});
+	</script>
 
 </body>
 

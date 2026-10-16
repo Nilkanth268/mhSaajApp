@@ -69,13 +69,13 @@ public class ProductRepository {
 				while (rs.next()) {
 
 					Product prod = new Product();
-					prod.setPid(rs.getInt("pId"));
+					prod.setPId(rs.getInt("pId"));
 					prod.setPCode(rs.getString("pCd"));
 					prod.setPName(rs.getString("pName"));
 					prod.setPCategory(rs.getString("pCat"));
 					prod.setPDescription(rs.getString("pDesc"));
 					prod.setPAmount(rs.getDouble("pAmt"));
-					prod.setImageName(rs.getString("pImage"));
+					populateProductImages(prod, rs.getString("pImage"));
 
 					pList.add(prod);
 				}
@@ -101,13 +101,13 @@ public class ProductRepository {
 
 				if (rs.next()) {
 
-					prod.setPid(rs.getInt("pId"));
+					prod.setPId(rs.getInt("pId"));
 					prod.setPCode(rs.getString("pCd"));
 					prod.setPName(rs.getString("pName"));
 					prod.setPCategory(rs.getString("pCat"));
 					prod.setPDescription(rs.getString("pDesc"));
 					prod.setPAmount(rs.getDouble("pAmt"));
-					prod.setImageName(rs.getString("pImage"));
+					populateProductImages(prod, rs.getString("pImage"));
 				}
 
 				return null;
@@ -123,9 +123,19 @@ public class ProductRepository {
 
 	public int deleteProductRepo(Integer pId) {
 
-	    String sql = "CALL DELETE_PRODUCT_BY_ID(?)";
+		String sql = "CALL DELETE_PRODUCT_BY_ID(?)";
 
-	    return jdbcTemplate.update(sql, pId);
+		return jdbcTemplate.update(sql, pId);
 	}
 
+	
+	private void populateProductImages(Product prod, String rawImages) {
+		if (rawImages != null && !rawImages.trim().isEmpty()) {
+			List<String> imgList = java.util.Arrays.stream(rawImages.split(",")).map(String::trim)
+					.filter(s -> !s.isEmpty()).toList();
+
+			prod.setImageList(imgList);
+			prod.setImageName(imgList.get(0)); // Cover image for Home & Cart
+		}
+	}
 }

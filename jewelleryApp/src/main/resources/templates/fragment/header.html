@@ -1,73 +1,175 @@
-<header th:fragment="header">
+<header th:fragment="header" class="sticky-top">
 
 	<div class="header-container">
 
-		<div class="logo">
-			💎  Maharashtrian Saaj
-		</div>
-
-		<div class="menu-toggle" onclick="toggleMenu()">
-			☰
-		</div>
+		<a th:href="@{/products}" class="logo text-decoration-none text-white">
+			💎 Maharashtrian Saaj
+		</a>
 
 		<nav id="nav-menu">
-
 			<ul>
-
 				<!-- COLLECTION -->
-				<li>
-					<a th:href="@{/products}">
-						Collections
-					</a>
+				<li th:if="${session.role == 'ROLE_ADMIN'}">
+					<a th:href="@{/productsCollection}">Collections</a>
 				</li>
 
 				<!-- LOGIN -->
 				<li th:if="${session.userId == null}">
-					<a th:href="@{/login}">
-						Login
-					</a>
+					<a th:href="@{/login}">Login</a>
 				</li>
 
 				<!-- LOGOUT -->
 				<li th:if="${session.userId != null}">
-					<a th:href="@{/logout}">
-						Logout
-					</a>
+					<a th:href="@{/logout}">Logout</a>
 				</li>
 
 				<!-- 👑 ADMIN ONLY -->
 				<li th:if="${session.role == 'ROLE_ADMIN'}">
-
-					<a th:href="@{admin/product_form}">
-						Add Product
-					</a>
-
+					<a th:href="@{/admin/product_form}">Add Product</a>
 				</li>
 
 				<li th:if="${session.userId == null}">
-
-					<a th:href="@{/user_form}">
-						Create User
-					</a>
-
+					<a th:href="@{/user_form}">Create User</a>
 				</li>
-
 			</ul>
-
 		</nav>
+
+		<!-- RIGHT SIDE ACTIONS: CART ICON + MOBILE MENU TOGGLE -->
+		<div class="header-actions">
+
+			<!-- CART BUTTON (Always visible on Desktop & Mobile) -->
+			<button type="button" id="navbar-cart" class="cart-icon-btn" onclick="openCartDialog()">
+				<span class="cart-emoji">🛒</span>
+				<span id="cart-badge" class="cart-badge-count">0</span>
+			</button>
+
+			<!-- HAMBURGER MENU FOR MOBILE -->
+			<div class="menu-toggle" onclick="toggleMenu()">
+				☰
+			</div>
+
+		</div>
 
 	</div>
 
+	<!-- CART DIALOG BOX (Bootstrap Modal) -->
+	<div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content border-0 shadow">
+
+				<div class="modal-header bg-warning text-dark">
+					<h5 class="modal-title fw-bold">🛒 Your Jewellery Cart</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body" id="cart-modal-body">
+					<p class="text-center text-muted my-4">Your cart is empty ✨</p>
+				</div>
+
+				<div class="modal-footer d-flex justify-content-between align-items-center">
+					<div class="fs-5 fw-bold text-dark">
+						Total: ₹ <span id="cart-total-amount">0</span>
+					</div>
+					<div>
+						<button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-dismiss="modal">
+							Close
+						</button>
+						<!-- If logged in, proceed to checkout; if guest, ask to login -->
+						<a th:if="${session.userId != null}" th:href="@{/checkout}" class="btn btn-warning fw-bold">
+							Proceed to Buy
+						</a>
+						<a th:if="${session.userId == null}" th:href="@{/login}" class="btn btn-warning fw-bold">
+							Login to Buy
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap JS (Required for the Dialog Box) -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 	<script>
-
 		function toggleMenu() {
-
-			document
-				.getElementById("nav-menu")
-				.classList
-				.toggle("show-menu");
+			document.getElementById("nav-menu").classList.toggle("show-menu");
 		}
 
+		// Load cart count automatically when any page loads
+		document.addEventListener("DOMContentLoaded", () => {
+			fetch("/cart/items")
+				.then(res => res.json())
+				.then(items => updateCartUI(items))
+				.catch(err => console.error("Cart load error:", err));
+		});
+
+		// Update badge count and Dialog Box item list
+		function updateCartUI(items) {
+			const badge = document.getElementById("cart-badge");
+			const modalBody = document.getElementById("cart-modal-body");
+			const totalEl = document.getElementById("cart-total-amount");
+
+			if (badge) badge.innerText = items.length;
+
+			if (!items || items.length === 0) {
+				modalBody.innerHTML = `<p class="text-center text-muted my-4">Your cart is empty ✨</p>`;
+				totalEl.innerText = "0";
+				return;
+			}
+
+			let total = 0;
+			let html = `<ul class="list-group list-group-flush">`;
+
+			items.forEach((item, index) => {
+				const price = parseFloat(item.pAmount) || 0;
+				total += price;
+				const imgSrc = item.imageName ? `/images/${item.imageName}` : `/images/default-jewel.jpg`;
+
+				html += `
+					<li class="list-group-item d-flex align-items-center justify-content-between py-2 px-1">
+						<div class="d-flex align-items-center">
+							<img src="${imgSrc}" style="width: 50px; height: 50px; object-fit: cover;" class="rounded border me-3">
+							<div>
+								<h6 class="mb-0 fw-bold text-dark">${item.pName}</h6>
+								<small class="text-warning fw-bold">₹ ${price.toLocaleString('en-IN')}</small>
+							</div>
+						</div>
+						<button class="btn btn-sm btn-outline-danger" onclick="removeCartItem(${index})" title="Remove">
+							✕
+						</button>
+					</li>`;
+			});
+
+			html += `</ul>`;
+			modalBody.innerHTML = html;
+			totalEl.innerText = total.toLocaleString('en-IN');
+		}
+
+	// Open Dialog Box on Cart Click (Fixed so page never freezes)
+		function openCartDialog() {
+			fetch("/cart/items")
+				.then(res => res.json())
+				.then(items => {
+					updateCartUI(items);
+					const modalEl = document.getElementById("cartModal");
+
+					// Move modal out of <header> to <body> so the backdrop doesn't freeze the page
+					if (modalEl.parentElement !== document.body) {
+						document.body.appendChild(modalEl);
+					}
+
+					const cartModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+					cartModal.show();
+				});
+		}
+
+		// Remove item from Cart Dialog Box
+		function removeCartItem(index) {
+			fetch(`/cart/remove/${index}`, {method: "POST"})
+				.then(res => res.json())
+				.then(items => updateCartUI(items));
+		}
 	</script>
 
 </header>
