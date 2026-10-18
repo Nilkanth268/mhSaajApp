@@ -12,6 +12,9 @@ public class Order {
 	private Double totalAmt;
 	private String oCrId;
 	private String orderStatus;
+	
+	
+	private String orderDate;
 
 	// Holds the individual products for com_order_dtl
 	private List<Product> itemList = new ArrayList<>();
@@ -78,5 +81,12 @@ public class Order {
 
 	public void setItemList(List<Product> itemList) {
 		this.itemList = itemList;
+	}
+	
+	public String getOrderDate() {
+		return orderDate;
+	}
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
 	}
 }

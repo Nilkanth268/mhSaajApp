@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -89,4 +90,38 @@ public class CheckoutController {
 
 		return response;
 	}
+	
+	
+	
+	
+	
+	
+	// 👑 ADMIN: View All Orders Page
+		@GetMapping("/admin/orders")
+		public String viewAllOrders(HttpSession session, Model model) {
+			// Optional security check: redirect non-admins
+			String role = (String) session.getAttribute("role");
+			if (role == null || !role.equals("ROLE_ADMIN")) {
+				return "redirect:/login";
+			}
+
+			List<Order> orders = orderService.getAllOrdersService();
+			model.addAttribute("orders", orders);
+			return "admin_orders";
+		}
+
+		// 👑 ADMIN: Fetch Order Detail Items (com_order_dtl) for Modal Popup
+		@GetMapping("/admin/order/details/{oId}")
+		@ResponseBody
+		public List<Product> getOrderDetails(@PathVariable Integer oId) {
+			return orderService.getOrderDetailsByIdService(oId);
+		}
+
+		// 👑 ADMIN: Update Order Status
+		@PostMapping("/admin/order/status")
+		public String updateStatus(@ org.springframework.web.bind.annotation.RequestParam Integer oId,
+								   @ org.springframework.web.bind.annotation.RequestParam String status) {
+			orderService.updateOrderStatusService(oId, status);
+			return "redirect:/admin/orders";
+		}
 }

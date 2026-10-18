@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin Orders - Maharashtrian Saaj</title>
+
+	<!-- BOOTSTRAP 5 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+	<!-- FONT AWESOME -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+	<!-- CUSTOM CSS -->
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+	<style>
+		body {
+			background-color: #f4f6f9;
+		}
+
+		.orders-wrapper {
+			margin-top: 30px;
+			margin-bottom: 60px;
+		}
+
+		.dashboard-card {
+			background: #ffffff;
+			border-radius: 16px;
+			padding: 25px;
+			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+			border-top: 4px solid #ffc107;
+		}
+
+		.status-badge {
+			font-size: 0.78rem;
+			font-weight: 700;
+			padding: 5px 10px;
+			border-radius: 20px;
+		}
+
+		.status-PENDING {
+			background-color: #fff3cd;
+			color: #856404;
+		}
+
+		.status-CONFIRMED {
+			background-color: #cfe2ff;
+			color: #084298;
+		}
+
+		.status-DELIVERED {
+			background-color: #d1e7dd;
+			color: #0f5132;
+		}
+
+		.status-CANCELLED {
+			background-color: #f8d7da;
+			color: #842029;
+		}
+
+		.wa-chat-btn {
+			background-color: #e8f8ee;
+			color: #128C7E;
+			border: 1px solid #25D366;
+			font-weight: 600;
+			font-size: 0.85rem;
+			border-radius: 8px;
+			padding: 4px 10px;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			transition: all 0.2s ease;
+		}
+
+		.wa-chat-btn:hover {
+			background-color: #25D366;
+			color: #fff;
+		}
+
+		/* Mobile Responsive Order Cards */
+		@media (max-width: 768px) {
+			.dashboard-card {
+				padding: 15px;
+			}
+
+			.table-responsive {
+				font-size: 0.88rem;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- HEADER -->
+	<div th:replace="~{fragment/header :: header}"></div>
+
+	<div class="container orders-wrapper">
+
+		<div class="dashboard-card">
+
+			<!-- TOP BAR + SEARCH -->
+			<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+				<div>
+					<h3 class="fw-bold mb-1 text-dark">
+						📦 Customer Orders
+					</h3>
+					<small class="text-muted">
+						Click "View Items" on any order to see individual jewellery pieces from
+						<code>com_order_dtl</code>
+					</small>
+				</div>
+
+				<!-- Instant Search Filter by Order ID, Name, or WhatsApp No -->
+				<div style="min-width: 260px;">
+					<input type="text" id="orderSearchInput" class="form-control"
+						placeholder="🔍 Search Order #101, Name, Phone..." onkeyup="filterOrders()">
+				</div>
+			</div>
+			
+			<!-- 🟢 ADD THE QUICK PRODUCT LOOKUP FORM RIGHT HERE -->
+			<div class="row g-2 align-items-center mb-4 p-3 bg-light rounded-3 border">
+			        <div class="col-md-5">
+			            <label class="form-label small fw-bold mb-1">🔍 Quick Product Photo Lookup</label>
+			            <div class="input-group input-group-sm">
+			                <input type="text" id="quickLookupInput" class="form-control" placeholder="Enter Product Code (e.g. MSJ-101) or ID">
+			                <button type="button" class="btn btn-dark fw-bold" onclick="lookupProductByCodeOrId()">
+			                    Find Photo
+			                </button>
+			            </div>
+			        </div>
+			    </div>
+
+			<!-- EMPTY STATE -->
+			<div th:if="${#lists.isEmpty(orders)}" class="text-center py-5 text-muted">
+				<i class="fa-solid fa-box-open fa-3x mb-3 text-warning"></i>
+				<h5>No orders placed yet.</h5>
+			</div>
+
+			<!-- ORDERS TABLE (com_order_hdr) -->
+			<div class="table-responsive" th:if="${!#lists.isEmpty(orders)}">
+				<table class="table table-hover align-middle" id="ordersTable">
+					<thead class="table-light">
+						<tr>
+							<th>Order ID</th>
+							<th>Date & Time</th>
+							<th>Customer Name</th>
+							<th>WhatsApp (Tap to Chat)</th>
+							<th>Alt. Phone</th>
+							<th>Total Amount</th>
+							<th>Order Items</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ord : ${orders}">
+
+							<!-- ORDER ID (#101) -->
+							<td class="fw-bold text-dark">
+								#<span th:text="${ord.oId}">101</span>
+							</td>
+
+							<!-- ORDER DATE -->
+							<td class="text-muted small" th:text="${ord.orderDate}">
+								18 Oct 2026
+							</td>
+
+							<!-- CUSTOMER NAME -->
+							<td class="fw-semibold" th:text="${ord.custName}">
+								Customer Name
+							</td>
+
+							<!-- WHATSAPP NO WITH 1-CLICK CHAT LINK -->
+							<td>
+								<a th:href="'https://wa.me/91' + ${ord.whatsappNo} + '?text=' +${#uris.escapeQueryParam('Hello ' + ord.custName + ', greetings from 💎 Maharashtrian Saaj! Regarding your Order #' + ord.oId + ' (Total: ₹' + ord.totalAmt + ')...')}"
+									target="_blank" class="wa-chat-btn" title="Chat with customer on WhatsApp">
+									<i class="fa-brands fa-whatsapp"></i>
+									<span th:text="${ord.whatsappNo}">9876543210</span>
+								</a>
+							</td>
+
+							<!-- ALTERNATE PHONE -->
+							<td>
+								<span th:if="${ord.altPhoneNo != null and ord.altPhoneNo != ''}"
+									th:text="${ord.altPhoneNo}" class="text-secondary small"></span>
+								<span th:if="${ord.altPhoneNo == null or ord.altPhoneNo == ''}"
+									class="text-muted small">—</span>
+							</td>
+
+							<!-- TOTAL AMOUNT -->
+							<td class="fw-bold text-warning">
+								₹ <span
+									th:text="${#numbers.formatDecimal(ord.totalAmt, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+							</td>
+
+							<!-- VIEW ORDER DETAILS BUTTON (Fetches com_order_dtl) -->
+							<td>
+								<button type="button" class="btn btn-sm btn-warning fw-bold" th:data-oid="${ord.oId}"
+									th:data-name="${ord.custName}" th:data-total="${ord.totalAmt}"
+									onclick="openOrderDetailModal(this)">
+									<i class="fa-solid fa-eye me-1"></i> View Items
+								</button>
+							</td>
+
+							<!-- UPDATE ORDER STATUS -->
+							<td>
+								<form th:action="@{/admin/order/status}" method="post"
+									class="d-flex align-items-center gap-1">
+									<input type="hidden" name="oId" th:value="${ord.oId}">
+									<select name="status" class="form-select form-select-sm fw-bold"
+										th:classappend="'status-' + ${ord.orderStatus}"
+										style="width: 135px; border-radius: 8px;" onchange="this.form.submit()">
+										<option value="PENDING" th:selected="${ord.orderStatus == 'PENDING'}">⏳ PENDING
+										</option>
+										<option value="CONFIRMED" th:selected="${ord.orderStatus == 'CONFIRMED'}">✔
+											CONFIRMED</option>
+										<option value="DELIVERED" th:selected="${ord.orderStatus == 'DELIVERED'}">🚚
+											DELIVERED</option>
+										<option value="CANCELLED" th:selected="${ord.orderStatus == 'CANCELLED'}">✖
+											CANCELLED</option>
+									</select>
+								</form>
+							</td>
+
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- MODAL POPUP FOR ORDER DETAILS (com_order_dtl) -->
+	<div class="modal fade" id="orderDtlModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div class="modal-content border-0 shadow">
+
+				<div class="modal-header bg-dark text-warning">
+					<h5 class="modal-title fw-bold">
+						🧾 Order #<span id="modalOrderId">101</span> — <span id="modalCustName"
+							class="text-white"></span>
+					</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
+
+				<div class="modal-body" id="order-dtl-body">
+					<div class="text-center py-4">
+						<div class="spinner-border text-warning"></div>
+					</div>
+				</div>
+
+				<div class="modal-footer d-flex justify-content-between">
+					<span class="fw-bold fs-5 text-dark">
+						Grand Total: <span class="text-warning">₹ <span id="modalOrderTotal">0</span></span>
+					</span>
+					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- FOOTER -->
+	<div th:replace="~{fragment/footer :: footer}"></div>
+	
+	<!-- QUICK LOOKUP RESULT MODAL -->
+	<div class="modal fade" id="quickLookupModal" tabindex="-1" aria-hidden="true">
+	    <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content border-0 shadow">
+	            <div class="modal-header bg-warning text-dark">
+	                <h5 class="modal-title fw-bold">💎 Product Verification Lookup</h5>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	            </div>
+	            <div class="modal-body text-center" id="quickLookupBody">
+	                <!-- Populated dynamically -->
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<script>
+		// 1. Open Modal & Fetch Individual Items from com_order_dtl
+		function openOrderDetailModal(btn) {
+			const oId = btn.getAttribute("data-oid");
+			const custName = btn.getAttribute("data-name");
+			const totalAmt = parseFloat(btn.getAttribute("data-total") || "0").toLocaleString("en-IN");
+
+			document.getElementById("modalOrderId").innerText = oId;
+			document.getElementById("modalCustName").innerText = custName;
+			document.getElementById("modalOrderTotal").innerText = totalAmt;
+
+			const bodyEl = document.getElementById("order-dtl-body");
+			bodyEl.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-warning"></div></div>`;
+
+			const modalEl = document.getElementById("orderDtlModal");
+			const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+			modal.show();
+
+			fetch(`/admin/order/details/${oId}`)
+				.then(res => res.json())
+				.then(items => {
+					if (!items || items.length === 0) {
+						bodyEl.innerHTML = `<p class="text-center text-muted my-3">No items found for this order.</p>`;
+						return;
+					}
+
+					let html = `<ul class="list-group list-group-flush">`;
+					items.forEach((item, idx) => {
+						const imgSrc = item.imageName ? `/images/${item.imageName}` : `/images/default-jewel.jpg`;
+						const price = parseFloat(item.pAmount || 0).toLocaleString("en-IN");
+
+						html += `
+											<li class="list-group-item d-flex align-items-center justify-content-between py-3 px-1">
+												<div class="d-flex align-items-center">
+													<span class="badge bg-dark me-2">#${item.pId}</span>
+													<img src="${imgSrc}" style="width: 58px; height: 58px; object-fit: cover;" class="rounded border me-3">
+													<div>
+														<h6 class="mb-0 fw-bold text-dark">${item.pName}</h6>
+														<small class="text-muted fw-semibold">Code: <span class="text-danger">${item.pCode || 'N/A'}</span></small>
+													</div>
+												</div>
+												<div class="fw-bold text-dark">
+													₹ ${price}
+												</div>
+											</li>`;
+					});
+					html += `</ul>`;
+					bodyEl.innerHTML = html;
+				})
+				.catch(err => {
+					console.error(err);
+					bodyEl.innerHTML = `<p class="text-danger text-center">Failed to load order items.</p>`;
+				});
+		}
+
+		// 2. Instant Search Filter for Order ID, Customer Name, or Phone Number
+		function filterOrders() {
+			const query = document.getElementById("orderSearchInput").value.toLowerCase();
+			const rows = document.querySelectorAll("#ordersTable tbody tr");
+
+			rows.forEach(row => {
+				const text = row.innerText.toLowerCase();
+				row.style.display = text.includes(query) ? "" : "none";
+			});
+		}
+		
+		function lookupProductByCodeOrId() {
+		    const val = document.getElementById("quickLookupInput").value.trim();
+		    if (!val) {
+		        alert("Please enter a Product Code or Product ID.");
+		        return;
+		    }
+
+		    let url = `/admin/product/lookup?`;
+		    if (!isNaN(val)) {
+		        url += `id=${val}`;
+		    } else {
+		        url += `code=${encodeURIComponent(val)}`;
+		    }
+
+		    fetch(url)
+		        .then(res => res.json())
+		        .then(prod => {
+		            const bodyEl = document.getElementById("quickLookupBody");
+		            if (!prod || !prod.pId) {
+		                bodyEl.innerHTML = `<p class="text-danger my-3 fw-bold">❌ No product found matching "${val}"</p>`;
+		            } else {
+		                const imgSrc = prod.imageName ? `/images/${prod.imageName}` : `/images/default-jewel.jpg`;
+		                bodyEl.innerHTML = `
+		                    <img src="${imgSrc}" style="width: 180px; height: 180px; object-fit: cover;" class="rounded border shadow mb-3">
+		                    <h4 class="fw-bold text-dark mb-1">${prod.pName}</h4>
+		                    <p class="text-muted mb-1">Code: <span class="text-danger fw-bold">${prod.pCode}</span> | ID: <span class="badge bg-dark">#${prod.pId}</span></p>
+		                    <p class="text-secondary small px-3">${prod.pDescription || ''}</p>
+		                    <h5 class="text-warning fw-bold">₹ ${parseFloat(prod.pAmount || 0).toLocaleString('en-IN')}</h5>
+		                `;
+		            }
+		            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("quickLookupModal"));
+		            modal.show();
+		        })
+		        .catch(err => {
+		            console.error(err);
+		            alert("Product lookup failed.");
+		        });
+		}
+	</script>
+
+</body>
+
+</html>

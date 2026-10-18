@@ -59,4 +59,64 @@ public class OrderRepository {
 			return null;
 		});
 	}
+
+	// 1. Get all Order Headers (com_order_hdr)
+	public List<Order> getAllOrdersRepo() {
+		List<Order> orderList = new ArrayList<>();
+		try {
+			String sql = "CALL GET_ALL_ORDERS()";
+			jdbcTemplate.query(sql, (ResultSetExtractor<Void>) rs -> {
+				while (rs.next()) {
+					Order ord = new Order();
+					ord.setOId(rs.getInt("oId"));
+					ord.setCustName(rs.getString("custName"));
+					ord.setWhatsappNo(rs.getString("whatsappNo"));
+					ord.setAltPhoneNo(rs.getString("altPhoneNo"));
+					ord.setTotalAmt(rs.getDouble("totalAmt"));
+					ord.setOCrId(rs.getString("oCrId"));
+					ord.setOrderDate(rs.getString("orderDate"));
+					ord.setOrderStatus(rs.getString("orderStatus"));
+					orderList.add(ord);
+				}
+				return null;
+			});
+		} catch (Exception e) {
+			System.out.println("Error fetching orders: " + e.getMessage());
+		}
+		return orderList;
+	}
+
+	// 2. Get Order Detail Items by Order ID (com_order_dtl)
+	public List<Product> getOrderDtlByIdRepo(Integer oId) {
+		List<Product> itemList = new ArrayList<>();
+		try {
+			String sql = "CALL GET_ORDER_DTL_BY_ID(?)";
+			jdbcTemplate.query(sql, ps -> ps.setInt(1, oId), (ResultSetExtractor<Void>) rs -> {
+				while (rs.next()) {
+					Product item = new Product();
+					item.setPId(rs.getInt("pId"));
+					item.setPCode(rs.getString("pCode"));
+					item.setPName(rs.getString("oItems"));
+					item.setPAmount(rs.getDouble("itemPrice"));
+
+					// Extract first cover image if product has multiple comma-separated images
+					String rawImg = rs.getString("pImage");
+					if (rawImg != null && !rawImg.trim().isEmpty()) {
+						item.setImageName(rawImg.split(",")[0].trim());
+					}
+					itemList.add(item);
+				}
+				return null;
+			});
+		} catch (Exception e) {
+			System.out.println("Error fetching order details: " + e.getMessage());
+		}
+		return itemList;
+	}
+
+	// 3. Update Order Status
+	public void updateOrderStatusRepo(Integer oId, String status) {
+		String sql = "CALL UPDATE_ORDER_STATUS(?, ?)";
+		jdbcTemplate.update(sql, oId, status);
+	}
 }

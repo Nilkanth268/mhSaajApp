@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jewellery.model.Product;
 import com.jewellery.service.ProductService;
@@ -113,4 +115,21 @@ public class ProductController {
 		return "redirect:/products";
 	}
 
+	
+	// 👑 ADMIN: Quick Lookup Product by Code or ID for Verification
+		@GetMapping("/admin/product/lookup")
+		@ResponseBody
+		public Product lookupProduct(@RequestParam(required = false) String code, @RequestParam(required = false) Integer id) {
+			if (code != null && !code.trim().isEmpty()) {
+				List<Product> all = productService.getAllProd();
+				for (Product p : all) {
+					if (p.getPCode() != null && p.getPCode().equalsIgnoreCase(code.trim())) {
+						return p;
+					}
+				}
+			} else if (id != null) {
+				return productService.getProdById(id);
+			}
+			return null;
+		}
 }
