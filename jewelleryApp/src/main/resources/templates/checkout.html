@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Checkout - Maharashtrian Saaj</title>
+
+	<!-- BOOTSTRAP 5 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+	<!-- FONT AWESOME -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+	<!-- CUSTOM CSS -->
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+	<style>
+		body {
+			background-color: #f6f6f6;
+		}
+
+		.checkout-wrapper {
+			margin-top: 35px;
+			margin-bottom: 60px;
+		}
+
+		.checkout-box {
+			background: #ffffff;
+			border-radius: 16px;
+			padding: 28px;
+			box-shadow: 0 6px 22px rgba(0, 0, 0, 0.07);
+			border-top: 4px solid #ffc107;
+		}
+
+		.summary-box {
+			background: #ffffff;
+			border-radius: 16px;
+			padding: 28px;
+			box-shadow: 0 6px 22px rgba(0, 0, 0, 0.07);
+			border-top: 4px solid #25D366;
+			position: sticky;
+			top: 90px;
+		}
+
+		.box-title {
+			font-weight: 800;
+			font-size: 1.3rem;
+			color: #222;
+			margin-bottom: 20px;
+			padding-bottom: 12px;
+			border-bottom: 1px solid #eee;
+		}
+
+		.form-label {
+			font-weight: 600;
+			color: #333;
+			margin-bottom: 6px;
+		}
+
+		.form-control,
+		.input-group-text {
+			border-radius: 10px;
+			padding: 12px;
+		}
+
+		.form-control:focus {
+			border-color: #ffc107;
+			box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+		}
+
+		.summary-item-list {
+			max-height: 320px;
+			overflow-y: auto;
+			padding-right: 4px;
+		}
+
+		.summary-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 12px 0;
+			border-bottom: 1px dashed #e5e5e5;
+		}
+
+		.summary-item:last-child {
+			border-bottom: none;
+		}
+
+		.summary-img {
+			width: 55px;
+			height: 55px;
+			object-fit: cover;
+			border-radius: 10px;
+			border: 1px solid #ddd;
+		}
+
+		.whatsapp-btn {
+			background-color: #25D366;
+			color: #ffffff;
+			font-weight: 700;
+			font-size: 1.08rem;
+			padding: 14px;
+			border-radius: 12px;
+			border: none;
+			width: 100%;
+			transition: all 0.2s ease;
+			box-shadow: 0 5px 15px rgba(37, 211, 102, 0.35);
+		}
+
+		.whatsapp-btn:hover {
+			background-color: #1ebe5d;
+			color: #ffffff;
+			transform: translateY(-2px);
+		}
+
+		.whatsapp-btn:active {
+			transform: scale(0.98);
+		}
+
+		.whatsapp-btn:disabled {
+			background-color: #79d89c;
+			cursor: not-allowed;
+			transform: none;
+		}
+
+		@media (max-width: 768px) {
+			.checkout-wrapper {
+				margin-top: 20px;
+			}
+			.checkout-box,
+			.summary-box {
+				padding: 20px 16px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- HEADER -->
+	<div th:replace="~{fragment/header :: header}"></div>
+
+	<!-- MAIN CHECKOUT SECTION -->
+	<div class="container checkout-wrapper">
+
+		<div class="row g-4">
+
+			<!-- BOX 1: CUSTOMER DETAILS (LEFT SIDE) -->
+			<div class="col-lg-7">
+				<div class="checkout-box">
+
+					<h4 class="box-title">
+						<i class="fa-solid fa-user-check text-warning me-2"></i>
+						Customer Contact Details
+					</h4>
+
+					<form id="checkoutForm" onsubmit="event.preventDefault(); sendOrderToWhatsApp();">
+
+						<!-- FULL NAME -->
+						<div class="mb-3">
+							<label class="form-label">
+								Full Name <span class="text-danger">*</span>
+							</label>
+							<div class="input-group">
+								<span class="input-group-text bg-light">
+									<i class="fa-solid fa-user text-secondary"></i>
+								</span>
+								<input type="text" id="custName" class="form-control"
+									maxlength="50" placeholder="Enter your full name" required>
+							</div>
+						</div>
+
+						<!-- CONTACT NUMBER (WHATSAPP ONLY*) -->
+						<div class="mb-3">
+							<label class="form-label">
+								Contact Number (WhatsApp Only <span class="text-danger">*</span>)
+							</label>
+							<div class="input-group">
+								<span class="input-group-text bg-success text-white fw-bold">
+									<i class="fa-brands fa-whatsapp me-1"></i> +91
+								</span>
+								<input type="tel" id="custWhatsapp" class="form-control"
+									placeholder="Enter 10-digit WhatsApp number"
+									pattern="[0-9]{10}" maxlength="10" required
+									oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+							</div>
+							<small class="text-muted">
+								We will share order confirmation & live jewellery updates on this WhatsApp number.
+							</small>
+						</div>
+
+						<!-- ALTERNATE CONTACT NUMBER -->
+						<div class="mb-3">
+							<label class="form-label">
+								Alternate Contact Number <span class="text-muted fw-normal">(Optional)</span>
+							</label>
+							<div class="input-group">
+								<span class="input-group-text bg-light">
+									<i class="fa-solid fa-phone text-secondary"></i> +91
+								</span>
+								<input type="tel" id="custAltPhone" class="form-control"
+									placeholder="Enter 10-digit alternate number"
+									pattern="[0-9]{10}" maxlength="10"
+									oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+							</div>
+						</div>
+
+					</form>
+
+				</div>
+			</div>
+
+			<!-- BOX 2: SEPARATE ORDER SUMMARY BOX (RIGHT SIDE) -->
+			<div class="col-lg-5">
+				<div class="summary-box">
+
+					<h4 class="box-title d-flex justify-content-between align-items-center">
+						<span>
+							<i class="fa-solid fa-bag-shopping text-warning me-2"></i>
+							Order Summary
+						</span>
+						<span class="badge bg-warning text-dark rounded-pill fs-6"
+							th:text="${itemCount} + ' Items'">0 Items</span>
+					</h4>
+
+					<!-- CART ITEMS LIST -->
+					<div class="summary-item-list mb-3">
+
+						<div class="summary-item" th:each="item : ${cartItems}"
+							 th:data-name="${item.pName}"
+							 th:data-code="${item.pCode}"
+							 th:data-price="${item.pAmount}">
+
+							<div class="d-flex align-items-center">
+								<img th:src="${item.imageName != null} ? @{'/images/' + ${item.imageName}} : @{/images/default-jewel.jpg}"
+									 class="summary-img me-3" alt="Product">
+								<div>
+									<h6 class="mb-0 fw-bold text-dark" th:text="${item.pName}">Jewellery Name</h6>
+									<small class="text-muted">
+										Code: <span th:text="${item.pCode != null ? item.pCode : 'N/A'}"></span>
+									</small>
+								</div>
+							</div>
+
+							<div class="fw-bold text-dark text-end ms-2">
+								₹ <span th:text="${#numbers.formatDecimal(item.pAmount, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+							</div>
+
+						</div>
+
+					</div>
+
+					<!-- PRICE BREAKDOWN -->
+					<div class="border-top pt-3 mb-4">
+						<div class="d-flex justify-content-between text-muted mb-2">
+							<span>Total Items</span>
+							<span th:text="${itemCount}">0</span>
+						</div>
+						<div class="d-flex justify-content-between fs-4 fw-bold text-dark">
+							<span>Grand Total</span>
+							<span class="text-warning">
+								₹ <span id="grandTotalText" th:text="${#numbers.formatDecimal(totalAmount, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+							</span>
+						</div>
+					</div>
+
+					<!-- PLACE ORDER ON WHATSAPP BUTTON -->
+					<button type="button" id="placeOrderBtn" class="whatsapp-btn" onclick="sendOrderToWhatsApp()">
+						<i class="fa-brands fa-whatsapp fa-lg me-2"></i>
+						Place Order on WhatsApp
+					</button>
+
+					<div class="text-center mt-3">
+						<a th:href="@{/products}" class="text-decoration-none text-secondary small">
+							← Continue Shopping
+						</a>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- FOOTER -->
+	<div th:replace="~{fragment/footer :: footer}"></div>
+
+	<!-- SAVE ORDER TO DB & OPEN WHATSAPP SCRIPT -->
+	<script>
+		// ⚠️ REPLACE WITH YOUR SHOP'S WHATSAPP NUMBER (Keep '91' country code at start)
+		const adminWhatsAppNumber = "919920387978";
+
+		function sendOrderToWhatsApp() {
+			const nameEl = document.getElementById("custName");
+			const whatsappEl = document.getElementById("custWhatsapp");
+			const altPhoneEl = document.getElementById("custAltPhone");
+			const orderBtn = document.getElementById("placeOrderBtn");
+
+			const name = nameEl.value.trim();
+			const whatsapp = whatsappEl.value.trim();
+			const altPhone = altPhoneEl.value.trim();
+
+			// 1. Validate Customer Name
+			if (!name) {
+				alert("Please enter your Full Name.");
+				nameEl.focus();
+				return;
+			}
+
+			// 2. Validate 10-digit WhatsApp Number
+			if (whatsapp.length !== 10) {
+				alert("Please enter a valid 10-digit WhatsApp Contact Number.");
+				whatsappEl.focus();
+				return;
+			}
+
+			// 3. Validate Optional Alternate Number if filled
+			if (altPhone.length > 0 && altPhone.length !== 10) {
+				alert("Alternate Contact Number must be 10 digits.");
+				altPhoneEl.focus();
+				return;
+			}
+
+			// Show loading state so user doesn't double-click
+			orderBtn.disabled = true;
+			orderBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Saving Order...`;
+
+			// 4. Send Order to CheckoutController -> SAVE_ORDER Stored Procedure
+			fetch("/checkout/place-order", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					custName: name,
+					whatsappNo: whatsapp,
+					altPhoneNo: altPhone
+				})
+			})
+			.then(res => res.json())
+			.then(data => {
+				if (!data.success) {
+					alert("Could not place order: " + (data.message || "Unknown error"));
+					orderBtn.disabled = false;
+					orderBtn.innerHTML = `<i class="fa-brands fa-whatsapp fa-lg me-2"></i> Place Order on WhatsApp`;
+					return;
+				}
+
+				// 5. Build Itemized WhatsApp Message with Generated Order ID (#101)
+				const itemElements = document.querySelectorAll(".summary-item");
+				let itemsText = "";
+
+				itemElements.forEach((el, index) => {
+					const pName = el.getAttribute("data-name") || "Jewellery Item";
+					const pCode = el.getAttribute("data-code") || "N/A";
+					const pPrice = parseFloat(el.getAttribute("data-price") || "0").toLocaleString("en-IN");
+
+					itemsText += `${index + 1}. *${pName}* (Code: ${pCode}) - ₹${pPrice}\n`;
+				});
+
+				const grandTotal = document.getElementById("grandTotalText").innerText;
+
+				let message = `💎 *New Order - Maharashtrian Saaj* 💎\n`;
+				message += `🧾 *Order ID:* #${data.orderId}\n`;
+				message += `------------------------------\n`;
+				message += `👤 *Customer Name:* ${name}\n`;
+				message += `📱 *WhatsApp No:* +91 ${whatsapp}\n`;
+				if (altPhone) {
+					message += `📞 *Alternate No:* +91 ${altPhone}\n`;
+				}
+				message += `------------------------------\n`;
+				message += `🛍️ *Order Summary:*\n`;
+				message += itemsText;
+				message += `------------------------------\n`;
+				message += `💰 *Grand Total: ₹ ${grandTotal}*\n\n`;
+				message += `Please confirm my jewellery order! ✨`;
+
+				const whatsappUrl = `https://wa.me/${adminWhatsAppNumber}?text=${encodeURIComponent(message)}`;
+
+				// 6. Open WhatsApp and Redirect back to Products page
+				window.open(whatsappUrl, "_blank");
+				window.location.href = "/home";
+			})
+			.catch(err => {
+				console.error("Order error:", err);
+				alert("Something went wrong while saving your order. Please try again.");
+				orderBtn.disabled = false;
+				orderBtn.innerHTML = `<i class="fa-brands fa-whatsapp fa-lg me-2"></i> Place Order on WhatsApp`;
+			});
+		}
+	</script>
+
+</body>
+
+</html>
